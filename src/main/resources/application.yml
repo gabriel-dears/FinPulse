@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: fin_pulse
+  datasource:
+    url: jdbc:postgresql://postgres:5432/finpulse_db
+    username: finpulse_user
+    password: finpulse_pass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+

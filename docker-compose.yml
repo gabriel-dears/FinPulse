@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  fin-pulse:
+    image: spring-boot-app # Use the name of the image built earlier
+    container_name: fin-pulse
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Expose the app on port 8080
+    depends_on:
+      - postgres # Ensure the database starts first
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finpulse_db
+      SPRING_DATASOURCE_USERNAME: finpulse_user
+      SPRING_DATASOURCE_PASSWORD: finpulse_pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update # Optional, adjust based on your needs
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:17 # Use PostgreSQL version 17
+    container_name: postgres
+    ports:
+      - "5500:5432" # Expose the database on port 5432
+    environment:
+      POSTGRES_DB: finpulse_db
+      POSTGRES_USER: finpulse_user
+      POSTGRES_PASSWORD: finpulse_pass
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # Persist database data
+    networks:
+      - app-network
+
+volumes:
+  postgres-data: # Volume for PostgreSQL data persistence
+
+networks:
+  app-network: # Shared network between services
